@@ -739,6 +739,11 @@
     .pl-link.sp:hover { border-color: #1db954; color: #1db954; background: rgba(29,185,84,0.12); box-shadow: 0 0 14px rgba(29,185,84,0.3); }
 
     /* ── Responsive ──────────────────────────────────────────────── */
+    @media (pointer: coarse) {
+      #cursor-dot, #cursor-ring { display: none; }
+      body, a, button { cursor: auto; }
+    }
+
     @media (max-width: 768px) {
       .nav-links { display: none; }
 
@@ -1094,30 +1099,32 @@
   </footer>
 
   <script>
-    /* ── Custom Cursor ───────────────────────────────────────────── */
-    const dot  = document.getElementById('cursor-dot');
-    const ring = document.getElementById('cursor-ring');
-    let mx = window.innerWidth / 2, my = window.innerHeight / 2;
-    let rx = mx, ry = my;
+    /* ── Custom Cursor (mouse/trackpad only) ────────────────────── */
+    if (window.matchMedia('(pointer: fine)').matches) {
+      const dot  = document.getElementById('cursor-dot');
+      const ring = document.getElementById('cursor-ring');
+      let mx = window.innerWidth / 2, my = window.innerHeight / 2;
+      let rx = mx, ry = my;
 
-    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+      document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
 
-    (function lerp() {
-      const speed = 0.12;
-      rx += (mx - rx) * speed;
-      ry += (my - ry) * speed;
-      dot.style.left  = mx + 'px';
-      dot.style.top   = my + 'px';
-      ring.style.left = rx + 'px';
-      ring.style.top  = ry + 'px';
-      requestAnimationFrame(lerp);
-    })();
+      (function lerp() {
+        const speed = 0.12;
+        rx += (mx - rx) * speed;
+        ry += (my - ry) * speed;
+        dot.style.left  = mx + 'px';
+        dot.style.top   = my + 'px';
+        ring.style.left = rx + 'px';
+        ring.style.top  = ry + 'px';
+        requestAnimationFrame(lerp);
+      })();
 
-    const hoverEls = document.querySelectorAll('a, button, .pill, .track-card');
-    hoverEls.forEach(el => {
-      el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
-      el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
-    });
+      const hoverEls = document.querySelectorAll('a, button, .pill, .track-card');
+      hoverEls.forEach(el => {
+        el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+        el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+      });
+    }
 
     /* ── Nav scroll ─────────────────────────────────────────────── */
     const nav = document.getElementById('nav');
